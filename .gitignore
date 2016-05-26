@@ -1,0 +1,12 @@
+
+# Compiled source #
+###################
+*.com
+*.class
+*.exe
+*.o
+*.so
+
+
+# Visual Studio Temp Files
+*.ipch
