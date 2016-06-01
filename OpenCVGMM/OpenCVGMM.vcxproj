@@ -82,10 +82,12 @@
   <ItemGroup>
     <ClCompile Include="DatasetLoader.cpp" />
     <ClCompile Include="MainFile.cpp" />
+    <ClCompile Include="Plot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
     <ClInclude Include="DatasetLoader.h" />
+    <ClInclude Include="Plot.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

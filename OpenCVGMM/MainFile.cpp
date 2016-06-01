@@ -1,7 +1,7 @@
 #pragma once 
 #include "common.h"
 #include "DatasetLoader.h"
-
+#include "Plot.h"
 void fitGMM(const cv::Mat &inData, const int &K, cv::Mat &piK, cv::Mat &muK, cv::Mat &sigmaK);
 void randomInitialize(cv::Mat &inHashmap, int clusterNum);
 void getGMMOfCluster(const cv::Mat &inData, const int &K, const cv::Mat &assignMap, cv::Mat &piK, cv::Mat &muK, cv::Mat &sigmaK);
@@ -20,7 +20,7 @@ int main(void)
 	cv::theRNG().state = cv::getTickCount();
 	cv::Mat xMat; // for containing all the observations from multiple gaussians
 
-	if(1 == 1)
+	if(1 == 12)
 	{
 		DatasetLoader myData;
 		cv::Mat allData = myData.readMatlabFile("testingAngles.dat");
@@ -39,7 +39,8 @@ int main(void)
 		xMat = generateData().clone();	
 	}
 
-
+	CPlot myPlot(1, 600, 600);
+	myPlot.plot(xMat.row(0).clone(), xMat.row(1).clone(), -10.9, 10.0, -10.0, 10.0, C_BLACK);
 	std::cout << xMat << std::endl;
 
 
@@ -62,6 +63,8 @@ int main(void)
 
 	// display the cluster results
 	std::cout << " cluster labels : " << clusterLabel << std::endl;
+
+	
 }
 
 // function for fitting GMM model with K clusters
@@ -389,7 +392,7 @@ cv::Mat generateData(void)
 	cv::Mat outMat;
 
 	// initialize with a number of points
-	outMat = cv::Mat::zeros(1, 100, CV_64FC1);
+	outMat = cv::Mat::zeros(2, 100, CV_64FC1);
 
 	// fill with 1D location of gaussian
 
@@ -398,11 +401,13 @@ cv::Mat generateData(void)
 		if( i < 50)
 		{
 			outMat.at<double>(0, i) = cv::theRNG().gaussian(2);
+			outMat.at<double>(1, i) = cv::theRNG().gaussian(2);
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6);
 		}
 		else
 		{
 			outMat.at<double>(0, i) = cv::theRNG().gaussian(2) + 6;
+			outMat.at<double>(1, i) = cv::theRNG().gaussian(2) + 6;
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6) + 6;
 		}
 
