@@ -2,6 +2,8 @@
 #include "common.h"
 #include "DatasetLoader.h"
 
+double C_REGULARIZATION_VALUE = 0.01;
+
 void fitGMM(const cv::Mat &inData, const int &K, cv::Mat &piK, cv::Mat &muK, cv::Mat &sigmaK);
 void randomInitialize(cv::Mat &inHashmap, int clusterNum);
 void getGMMOfCluster(const cv::Mat &inData, const int &K, const cv::Mat &assignMap, cv::Mat &piK, cv::Mat &muK, cv::Mat &sigmaK);
@@ -20,7 +22,7 @@ int main(void)
 	cv::theRNG().state = cv::getTickCount();
 	cv::Mat xMat; // for containing all the observations from multiple gaussians
 
-	if(1 == 1)
+	if(1 == 2)
 	{
 		DatasetLoader myData;
 		cv::Mat allData = myData.readMatlabFile("testingAngles.dat");
@@ -302,7 +304,9 @@ void updateGMM(const cv::Mat &inData, const cv::Mat &assignScore, cv::Mat &piK, 
 		std::cout << "Mean after: " << curMean <<std::endl;
 		std::cout << "Pi After: " << curPi <<std::endl;
 
-
+		// regularization of covariance using identity
+        cv::Mat eyeMat = cv::Mat::eye(muK.rows, muK.rows, CV_64FC1);
+        curCov = C_REGULARIZATION_VALUE * eyeMat + (1 - C_REGULARIZATION_VALUE) * curCov;
 
 		// assign the Matrices back
 		curMean.copyTo(muK.col(k));
@@ -402,7 +406,8 @@ cv::Mat generateData(void)
 		}
 		else
 		{
-			outMat.at<double>(0, i) = cv::theRNG().gaussian(2) + 6;
+			// outMat.at<double>(0, i) = cv::theRNG().gaussian(2) + 6;
+			outMat.at<double>(0, i) = outMat.at<double>(0, i-50) + cv::theRNG().gaussian(2);
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6) + 6;
 		}
 

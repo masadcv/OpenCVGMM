@@ -1,22 +1,15 @@
-﻿Build started 26/05/2016 19:53:42.
+﻿Build started 01/06/2016 16:05:29.
      1>Project "E:\VCProj\OpenCVGMM\OpenCVGMM\OpenCVGMM.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Debug\OpenCVGMM.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I./include /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt MainFile.cpp
-         MainFile.cpp
+         All outputs are up-to-date.
        ManifestResourceCompile:
          All outputs are up-to-date.
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\VCProj\OpenCVGMM\Debug\OpenCVGMM.exe" /INCREMENTAL /NOLOGO /LIBPATH:./lib opencv_calib3d247d.lib opencv_contrib247d.lib opencv_core247d.lib opencv_features2d247d.lib opencv_flann247d.lib opencv_gpu247d.lib opencv_highgui247d.lib opencv_imgproc247d.lib opencv_legacy247d.lib opencv_ml247d.lib opencv_nonfree247d.lib opencv_objdetect247d.lib opencv_photo247d.lib opencv_stitching247d.lib opencv_ts247d.lib opencv_video247d.lib opencv_videostab247d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\OpenCVGMM.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\VCProj\OpenCVGMM\Debug\OpenCVGMM.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\VCProj\OpenCVGMM\Debug\OpenCVGMM.lib" /MACHINE:X86 Debug\OpenCVGMM.exe.embed.manifest.res
-         Debug\DatasetLoader.obj
-         Debug\MainFile.obj
+         All outputs are up-to-date.
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\OpenCVGMM.exe.embed.manifest" /manifest Debug\OpenCVGMM.exe.intermediate.manifest
          All outputs are up-to-date.
-       LinkEmbedManifest:
-         All outputs are up-to-date.
-         OpenCVGMM.vcxproj -> E:\VCProj\OpenCVGMM\Debug\OpenCVGMM.exe
        FinalizeBuildStatus:
          Deleting file "Debug\OpenCVGMM.unsuccessfulbuild".
          Touching "Debug\OpenCVGMM.lastbuildstate".
@@ -24,4 +17,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.83
+Time Elapsed 00:00:00.07
