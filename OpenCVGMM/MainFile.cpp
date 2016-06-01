@@ -41,7 +41,8 @@ int main(void)
 		xMat = generateData().clone();	
 	}
 
-
+	CPlot myPlot(1, 600, 600);
+	myPlot.plot(xMat.row(0).clone(), xMat.row(1).clone(), -10.9, 10.0, -10.0, 10.0, C_BLACK);
 	std::cout << xMat << std::endl;
 
 
@@ -64,6 +65,8 @@ int main(void)
 
 	// display the cluster results
 	std::cout << " cluster labels : " << clusterLabel << std::endl;
+
+	
 }
 
 // function for fitting GMM model with K clusters
