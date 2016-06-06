@@ -439,14 +439,14 @@ cv::Mat generateData(void)
 	{
 		if( i < outMat.cols/2)
 		{
-			outMat.at<double>(0, i) = cv::theRNG().gaussian(1);
-			outMat.at<double>(1, i) = cv::theRNG().gaussian(1);
+			outMat.at<double>(0, i) = cv::theRNG().gaussian(3);
+			outMat.at<double>(1, i) = cv::theRNG().gaussian(3);
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6);
 		}
 		else
 		{
-			 outMat.at<double>(0, i) = cv::theRNG().gaussian(1) + 6;
-			 outMat.at<double>(1, i) = cv::theRNG().gaussian(1) + 6;
+			 outMat.at<double>(0, i) = cv::theRNG().gaussian(3);
+			 outMat.at<double>(1, i) = cv::theRNG().gaussian(3);
 			//outMat.at<double>(0, i) = outMat.at<double>(0, i-50) + cv::theRNG().gaussian(2);
 			//outMat.at<double>(1, i) = outMat.at<double>(1, i-50) + cv::theRNG().gaussian(2);
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6) + 6;
