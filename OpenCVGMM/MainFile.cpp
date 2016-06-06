@@ -1,5 +1,6 @@
 #pragma once 
 #include "common.h"
+#include "Plot.h"
 #include "DatasetLoader.h"
 
 double C_REGULARIZATION_VALUE = 0.01;
@@ -22,28 +23,26 @@ int main(void)
 	cv::theRNG().state = cv::getTickCount();
 	cv::Mat xMat; // for containing all the observations from multiple gaussians
 
-	if(1 == 2)
-	{
-		DatasetLoader myData;
-		cv::Mat allData = myData.readMatlabFile("testingAngles.dat");
-		int sizeOfData = 20;
-		xMat = cv::Mat::zeros(2, sizeOfData, CV_64FC1);
-		// extract a small part of the data
-		for(int i = 0; i < sizeOfData; i++)
-		{
-			xMat.at<double>(0, i) = allData.at<float>(0, i);
-			xMat.at<double>(1, i) = allData.at<float>(1, i);
-		}
-	}
-	else
-	{
+	//if(1 == 2)
+	//{
+	//	DatasetLoader myData;
+	//	cv::Mat allData = myData.readMatlabFile("testingAngles.dat");
+	//	int sizeOfData = 20;
+	//	xMat = cv::Mat::zeros(2, sizeOfData, CV_64FC1);
+	//	// extract a small part of the data
+	//	for(int i = 0; i < sizeOfData; i++)
+	//	{
+	//		xMat.at<double>(0, i) = allData.at<float>(0, i);
+	//		xMat.at<double>(1, i) = allData.at<float>(1, i);
+	//	}
+	//}
+	//else
+	//{
 		// generate dummy data to check
 		xMat = generateData().clone();	
-	}
+	//}
 
-	CPlot myPlot(1, 600, 600);
-	myPlot.plot(xMat.row(0).clone(), xMat.row(1).clone(), -10.9, 10.0, -10.0, 10.0, C_BLACK);
-	std::cout << xMat << std::endl;
+
 
 
 	// we have the data now we need a gaussian mixture model estimator
@@ -89,15 +88,42 @@ void fitGMM(const cv::Mat &inData, const int &K, cv::Mat &piK, cv::Mat &muK, cv:
 	//std::cout << "curWeight: " << piK << std::endl;
 	//std::cout << "curMean: " << muK << std::endl;
 	//std::cout << "curCov: " << sigmaK << std::endl;
-
+	CPlot myPlot(1, 600, 600);
+	//myPlot.plot(xMat.row(0).clone(), xMat.row(1).clone(), -10.0, 10.0, -10.0, 10.0, C_BLACK);
+	//myPlot.plot(1.0, 1.0, -10.0, 10.0, -10.0, 10.0, C_RED);
+	//std::cout << xMat << std::endl;
 	// next step is to get the assignment score
 	cv::Mat assignScore;
 	double maxlogLH = -DBL_MAX;
-	for(int i = 0; i < 1000; i++)
+	for(int i = 0; i < 5000; i++)
 	{
 		getAssignmentScore(inData, piK, muK, sigmaK, assignScore);
 
 		updateGMM(inData, assignScore, piK, muK, sigmaK);
+		cv::Mat clusterLabel;
+		clusterWithGMM(inData, piK, muK, sigmaK, clusterLabel);
+		for(int iIdx = 0; iIdx < inData.cols; iIdx++)
+		{
+			if(clusterLabel.at<double>(0, iIdx) == 0)
+				myPlot.plot(inData.at<double>(0, iIdx), inData.at<double>(1, iIdx), -10.0, 10.0, -10.0, 10.0, C_RED);
+			else
+				myPlot.plot(inData.at<double>(0, iIdx), inData.at<double>(1, iIdx), -10.0, 10.0, -10.0, 10.0, C_GREEN);
+		}
+
+		for(int iIdx = 0; iIdx < muK.cols; iIdx++)
+		{
+			cv::Rect roi(iIdx * muK.rows, 0, muK.rows, muK.rows);
+			if(iIdx == 0)
+				myPlot.drawErrorEllipse(muK.col(iIdx), sigmaK(roi), C_RED);
+			else
+				myPlot.drawErrorEllipse(muK.col(iIdx), sigmaK(roi), C_GREEN);
+			
+		}
+
+		myPlot.drawNow();
+ 		//cv::waitKey(0);
+
+		
 		double logLH = getLogLikelihood(inData, piK, muK, sigmaK);
 
 		if( (logLH - maxlogLH) > 0.000001 )
@@ -109,7 +135,12 @@ void fitGMM(const cv::Mat &inData, const int &K, cv::Mat &piK, cv::Mat &muK, cv:
 		}
 		std::cout << "logLikelihood : " << getLogLikelihood(inData, piK, muK, sigmaK) << std::endl;
 
+		char buffer[50];
+		sprintf(buffer, "outImage_%0.5d.png", i);
+		cv::imwrite(buffer, myPlot.m_display);
+		myPlot.clear();
 	}
+	cv::waitKey(0);
 
 }
 
@@ -167,6 +198,10 @@ void getGMMOfCluster(const cv::Mat &inData, const int &K, const cv::Mat &assignM
 		getMeanAndCovariance(curPoints, curMean, curCov);
 		//std::cout << "curCovariance: " << curCov << std::endl;
 		//std::cout << "curMean: " << curMean << std::endl;
+
+		// regularization
+        cv::Mat eyeMat = cv::Mat::eye(inData.rows, inData.rows, CV_64FC1);
+        curCov = C_REGULARIZATION_VALUE * eyeMat + (1 - C_REGULARIZATION_VALUE) * curCov;
 
 		// copy the mean and cov to return mat
 		for(int cI = 0; cI < curMean.cols; cI++)
@@ -396,21 +431,24 @@ cv::Mat generateData(void)
 	cv::Mat outMat;
 
 	// initialize with a number of points
-	outMat = cv::Mat::zeros(1, 100, CV_64FC1);
+	outMat = cv::Mat::zeros(2, 500, CV_64FC1);
 
 	// fill with 1D location of gaussian
 
 	for(int i = 0; i < outMat.cols; i++)
 	{
-		if( i < 50)
+		if( i < outMat.cols/2)
 		{
-			outMat.at<double>(0, i) = cv::theRNG().gaussian(2);
+			outMat.at<double>(0, i) = cv::theRNG().gaussian(1);
+			outMat.at<double>(1, i) = cv::theRNG().gaussian(1);
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6);
 		}
 		else
 		{
-			// outMat.at<double>(0, i) = cv::theRNG().gaussian(2) + 6;
-			outMat.at<double>(0, i) = outMat.at<double>(0, i-50) + cv::theRNG().gaussian(2);
+			 outMat.at<double>(0, i) = cv::theRNG().gaussian(1) + 6;
+			 outMat.at<double>(1, i) = cv::theRNG().gaussian(1) + 6;
+			//outMat.at<double>(0, i) = outMat.at<double>(0, i-50) + cv::theRNG().gaussian(2);
+			//outMat.at<double>(1, i) = outMat.at<double>(1, i-50) + cv::theRNG().gaussian(2);
 			//outMat.at<double>(1, i) = cv::theRNG().gaussian(6) + 6;
 		}
 
